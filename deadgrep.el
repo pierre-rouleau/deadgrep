@@ -1851,18 +1851,19 @@ don't actually start the search."
 (defun deadgrep-next-error (arg reset)
   "Move to the next error.
 If ARG is given, move by that many errors.
+A negative ARG moves to the previous error.
 
 This is intended for use with `next-error-function', which see."
   (when reset
     (goto-char (point-min)))
   (beginning-of-line)
-  (let ((direction (> arg 0)))
+  (let ((going-forward (> arg 0)))
     (setq arg (abs arg))
 
     (while (and
             (not (zerop arg))
-            (not (eobp)))
-      (if direction
+            (if going-forward (not (eobp)) (not (bobp))))
+      (if going-forward
           (forward-line 1)
         (forward-line -1))
       ;; If we are on a specific result (not a heading), we have a line
